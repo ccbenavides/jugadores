@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+<section class="container">
+    <div class="top_menu">
+        <div>Elija informacion que desea monstrar</div>
+        <div><a class="enlace" href="/admin"><span>&#10140;</span> Volver </a></div>
+    </div>
+    
+
+   <form action="/edit_permisos/{{ jugador[0] }}" method="post">
+        <table class="table_jugador">
+           <thead>
+               <tr class="tr_header">
+                   <th> {{ jugador[1] }}</th>
+               </tr>
+           </thead>
+            <tbody  class="table_body">
+                {% for vista in data %}
+                <tr>
+                    <td>{{ vista[0] }}</td>
+                    <td class="botones"> 
+                        <input type="radio"
+                               name="{{ vista[1]}}" 
+                               {{ 'checked' if vista[2] == 1 }} 
+                               value="1" /> 
+                               <span>Si</span> 
+                        <input type="radio"
+                               name="{{ vista[1]}}" 
+                               {{ 'checked' if vista[2] == 0 }} 
+                               value="0" /> 
+                               <span>No</span> 
+                    </td>
+                </tr>
+                {% endfor %}
+             
+       
+
+           </tbody>
+       </table>
+        <div class="boton_registrar" >
+           <input type="submit" value="Actualizar">
+       </div>
+   </form>
+</section>
+    
+</body>
+</html>

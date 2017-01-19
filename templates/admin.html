@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+<section class="container">
+    <div class="top_menu">
+        <div>Administrador de jugadores</div>
+        <div><a class="enlace" href="/"><span>&#10140;</span> index</a></div>
+    </div>
+    <div>
+
+       
+    </div>
+   <header class="header">
+       <form action="#" class="header_form">
+           <input type="text" class="search_text" placeholder="Search"/>
+           <input type="button" class="search_button" value="Buscar"/>
+       </form>
+   </header>
+   <section class="botones mrt_20">
+       <a href="/create" class="bg-blue">Crear jugador</a>
+   </section>
+   <section>
+       <table class="table_jugador">
+           <thead>
+               <tr class="tr_header">
+                   <th>Jugador</th>
+               </tr>
+           </thead>
+            <tbody  class="table_body">
+                <!-- recorro la tupla de datos( lista de todos los jugadores ) -->
+                {% for jugador in data %}
+                <tr>
+                    <td>{{jugador[1]}}</td>
+                    <td class="botones"> 
+                        <a  class="bg-blue" 
+                            href="/edit_view/{{ jugador[0] }}" >
+                            <span>&#10149;</span>Administrar vista
+                        </a>    
+                        <a  class="bg-orange" 
+                            href="#">
+                            <span>&#9998;</span> 
+                            Editar
+                        </a>    
+                        <!--<a class="bg-red" href="#"><span>&#10005;</span>Eliminar</a>    -->
+                    </td>
+                </tr>
+                {% endfor %}
+
+
+
+           </tbody>
+       </table>
+   </section>
+</section>
+    
+</body>
+</html>

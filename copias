@@ -1,0 +1,14 @@
+    cursor.execute("""insert into jugador
+                    (`apodo`, `nombre`, `mundiales`, `copas`, `goles`, `historia`, `url_img`) 
+                    values 
+                    (%s, %s, %s, %s, %s, %s , %s);
+                """, (request.form['apodo']
+                      , request.form['nombre']
+                      , request.form['mundiales']
+                      , request.form['copas']
+                      , request.form['goles']
+                      , request.form['historia']
+                      , ""))
+    conn.commit()
+    cursor.execute("""insert into vista_jugador  (`idvista`, `idjugador`)
+                    select idvista,LAST_INSERT_ID() from vista;""")

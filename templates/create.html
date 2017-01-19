@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/style.css">
+</head>
+<body>
+<section class="container">
+    <div class="top_menu">
+        <div></div>
+        <div><a class="enlace" href="/admin"><span>&#8617;</span> volver</a></div>
+    </div>
+       <header>
+        <h1 class="titulo">Registre un trabajador </h1>
+    </header>
+    <form action="/crear_jugador" method="POST">
+        <article class="article">
+           <h1 class="width_100">
+                <label for="">Comunmente llamado: </label>               
+                <input type="text" name="apodo">
+           </h1>
+           <div>
+               <img src="" 
+                    alt=""
+                    class="img_responsive"
+                    id="img_article"
+                    />
+                <input type="file" name="file" onchange="previewFile()" id="file" class="inputfile"/>
+                <label class="label_file" for="file">Subir imagen</label>
+           </div>
+           <div>
+                <div class="features">
+                    <h5>Nombre : </h5>
+                    <p><input type="text" name="nombre"></p>
+                    <h5>Mundiales ganados: </h5>
+                    <p><input type="text" name="mundiales"></p>
+                    <h5>Copas Ganadas : </h5>
+                    <p><input type="text" name="copas" ></p>
+                    <h5>Goles con su camisea :</h5>
+                    <p><input type="text" name="goles"></p>
+                    
+                </div>
+           </div>
+          
+           <div>
+                   <h5>Historia:</h5>
+                   <textarea class="textarea" name="historia" id="" cols="30" rows="10"></textarea>
+           </div>
+           <div>
+               <h5 class="botones">Premios recividos 
+                    <a class="bg-blue" 
+                       href="#"
+                       id="agregar_premio">Agregar</a> 
+                </h5>
+               <ul id="lista_premio">
+                   <li class="list_premios" id="copia_li"><input type="text" name="premio[]"><button id="eliminar_premio">Eliminar</button></li>
+                  
+               </ul>
+           </div>
+       </article>
+
+       <div class="boton_registrar" >
+           <input type="submit" value="Registrar">
+       </div>
+    </form>
+   
+</section>
+    
+</body>
+</html>
+<!-- javascript solo para la parte de agregar premios y subir la imagen -->
+<script>
+    var agregar_premio = document.getElementById("agregar_premio");
+    var lista_premio = document.getElementById("lista_premio");
+
+
+    agregar_premio.onclick = function(e){
+        e.preventDefault();
+        let s = '<input type="text" name="premio[]"><button  id="eliminar_premio">Eliminar</button>'; // HTML string
+        let li = document.createElement('li');
+        li.className += "list_premios";
+        li.innerHTML = s;
+        lista_premio.appendChild(li)
+    }
+
+    lista_premio.onclick = function(e){
+        if(e.target.id == "eliminar_premio"){
+           console.log(e.target.parentNode.remove())
+        }
+    }
+
+
+    function previewFile(){
+       var preview = document.getElementById('img_article'); //selects the query named img
+       var file    = document.querySelector('input[type=file]').files[0]; //sames as here
+       var reader  = new FileReader();
+
+       reader.onloadend = function () {
+           preview.src = reader.result;
+       }
+
+       if (file) {
+           reader.readAsDataURL(file); //reads the data as a URL
+       } else {
+           preview.src = "https://support.interviewstream.com/images/Upload-icon-text.png";
+       }
+  }
+
+  previewFile();
+</script>

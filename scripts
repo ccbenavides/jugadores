@@ -1,0 +1,23 @@
+
+
+INSERT INTO vista (`descripcion`, `name`)  values 
+("Historia", "historia") ,
+("Mundiales Ganados", "mundiales"),
+("Copas Ganadas", "copas"),
+("Goles con su camiseta", "goles"),
+("Premios recividos", "premios")
+INSERT INTO vista
+delete from jugador where idjugador=2;
+select * from jugador;
+select * from vista;
+select * from vista_jugador;
+
+insert into jugador 
+(`apodo`, `nombre`, `mundiales`, `copas`, `goles`, `historia`) 
+values 
+("camello","bla bla",23,2,23,"casa choros");
+insert into vista_jugador  (`idvista`,
+`idjugador`) select idvista,LAST_INSERT_ID() from vista
+
+select idvista,LAST_INSERT_ID() from vista
+
