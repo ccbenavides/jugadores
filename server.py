@@ -4,6 +4,7 @@ con la ayuda de flask
 """
 from flask import Flask, render_template, url_for, request, redirect
 from flaskext.mysql import MySQL
+import json
 
 app = Flask(__name__)
 
@@ -69,6 +70,32 @@ def show_post(post_id):
 
 @app.route('/crear_jugador', methods=['POST'])
 def crear_jugador():
-    return request.form["premio[]"]
-    #return redirect(url_for('admin'))
+    #change = request.args.get('premio', None)
+    cursor.execute("""insert into jugador
+                    (`apodo`, `nombre`, `mundiales`, `copas`, `goles`, `historia`, `url_img`) 
+                    values 
+                    (%s, %s, %s, %s, %s, %s , %s);
+                """, (request.form['apodo']
+                      , request.form['nombre']
+                      , request.form['mundiales']
+                      , request.form['copas']
+                      , request.form['goles']
+                      , request.form['historia']
+                      , ""))
+
+    cursor.execute("""insert into vista_jugador  (`idvista`, `idjugador`)
+                    select idvista,LAST_INSERT_ID() from vista;""")
+    cursor.execute(""" SELECT LAST_INSERT_ID() """)
+    jugador_id = cursor.fetchone()
+    # payload = json.loads(request.get_data().decode('utf-8'))
+    array_jugadores = str(request.get_data())
+    for array in array_jugadores.split("&"):
+        if array.split("=")[0] == "premio_":
+            cursor.execute(""" insert into premios (descripcion, idjugador )
+                        values ( %s, %s)""",
+                           (array.split("=")[1], str(jugador_id[0])))
+
+    conn.commit()
+    # return array_jugadores
+    return redirect(url_for('admin'))
     

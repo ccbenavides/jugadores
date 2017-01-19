@@ -1,23 +1,40 @@
-
-
 INSERT INTO vista (`descripcion`, `name`)  values 
 ("Historia", "historia") ,
 ("Mundiales Ganados", "mundiales"),
 ("Copas Ganadas", "copas"),
 ("Goles con su camiseta", "goles"),
-("Premios recividos", "premios")
-INSERT INTO vista
-delete from jugador where idjugador=2;
-select * from jugador;
-select * from vista;
-select * from vista_jugador;
+("Premios recividos", "premios");
+
 
 insert into jugador 
 (`apodo`, `nombre`, `mundiales`, `copas`, `goles`, `historia`) 
 values 
-("camello","bla bla",23,2,23,"casa choros");
+("lorenzo",
+"Edson Arantes do Nascimento",
+9,
+4,
+200,
+"conocido mundialmente como Pelé, es un exfutbolista brasileño.
+Es considerado por muchos jugadores y exjugadores,
+diversos organismos deportivos, periodistas y la prensa en general,
+ y gran parte de los admiradores del fútbol, como el «mejor futbolista de la historia");
+ 
+ 
+ insert into jugador 
+(`apodo`, `nombre`, `mundiales`, `copas`, `goles`, `historia`) 
+values 
+("Pirlo",
+"Andrea Pirlo",
+6,
+5,
+170,
+"Andrea Pirlo es un futbolista italiano. 
+Se desempeña en la posición de centrocampista 
+y su actual equipo es el New York City de la 
+Major League Soccer de Estados Unidos.");
+
 insert into vista_jugador  (`idvista`,
-`idjugador`) select idvista,LAST_INSERT_ID() from vista
-
-select idvista,LAST_INSERT_ID() from vista
-
+`idjugador`) select idvista,LAST_INSERT_ID() from vista;
+select * from jugador;
+select * from premios;
+insert into premios (descripcion, idjugador ) values ("datos", 13)

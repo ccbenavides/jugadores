@@ -54,7 +54,7 @@
                        id="agregar_premio">Agregar</a> 
                 </h5>
                <ul id="lista_premio">
-                   <li class="list_premios" id="copia_li"><input type="text" name="premio[]"><button id="eliminar_premio">Eliminar</button></li>
+                 
                   
                </ul>
            </div>
@@ -77,7 +77,7 @@
 
     agregar_premio.onclick = function(e){
         e.preventDefault();
-        let s = '<input type="text" name="premio[]"><button  id="eliminar_premio">Eliminar</button>'; // HTML string
+        let s = '<input type="text" name="premio_"><button  id="eliminar_premio">Eliminar</button>'; // HTML string
         let li = document.createElement('li');
         li.className += "list_premios";
         li.innerHTML = s;

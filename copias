@@ -12,3 +12,11 @@
     conn.commit()
     cursor.execute("""insert into vista_jugador  (`idvista`, `idjugador`)
                     select idvista,LAST_INSERT_ID() from vista;""")
+
+
+    array_jugadores = str(request.get_data())
+    for array in array_jugadores.split("&"):
+        if array.split("=")[0] == "premio_":
+            cursor.execute(""" insert into premios (descripcion, idjugador )
+                        values ( %s, %s)""",
+                           (array.split("=")[1], jugador_id))
