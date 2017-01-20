@@ -19,19 +19,26 @@ mysql.init_app(app)
 conn = mysql.connect()
 cursor = conn.cursor()
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def index():
-    return render_template('index.html')
+    name = request.args.get("nombre") or ''
+    cursor.execute('''select * from jugador where apodo like %s ''', name + "%")
+    data = cursor.fetchall()
+    return render_template('index.html', data=data, name=name)
 
 @app.route('/admin')
 def admin():
-    cursor.execute('''select * from jugador''')
+    name = request.args.get("nombre") or ''
+    cursor.execute('''select * from jugador where apodo like %s ''', name + "%")
     data = cursor.fetchall()
-    return render_template('admin.html', data=data)
+    return render_template('admin.html', data=data, name=name)
 
 @app.route('/view/<id_player>')
 def view(id_player=None):
-    return render_template('view.html', id_player=id_player)
+    cursor.execute(''' select * from jugador where idjugador=%s''', id_player)
+    data = cursor.fetchone()
+
+    return render_template('view.html', data)
 
 @app.route('/create')
 def create():

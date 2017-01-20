@@ -12,9 +12,9 @@
         <div><a class="enlace" href="/admin"><span>&#10140;</span> Admin</a></div>
     </div>
    <header class="header">
-       <form action="#" class="header_form">
-           <input type="text" class="search_text" placeholder="Search"/>
-           <input type="button" class="search_button" value="Buscar"/>
+       <form action="/" class="header_form">
+           <input type="text" name="nombre" value="{{name}}" class="search_text" placeholder="Search"/>
+           <input type="submit" class="search_button" value="Buscar"/>
        </form>
    </header>
    <section>
@@ -25,19 +25,17 @@
                </tr>
            </thead>
             <tbody  class="table_body">
+                                <!-- recorro la tupla de datos( lista de todos los jugadores ) -->
+                {% for jugador in data %}
                 <tr>
-                    <td>Pelé</td>
+                    <td>{{jugador[1]}}</td>
                     <td class="botones"> 
-                        <a class="bg-blue" href="/view/2"><span>&#10149;</span>ver detalles</a>    
+                        <a class="bg-blue" href="/view/{{ jugador[0] }}"><span>&#10149;</span>ver detalles</a>    
                     </td>
                 </tr>
-                <tr>
-                    <td>Neymar</td>
-                    <td class="botones"> 
-                        <a class="bg-blue" href="/view/1"><span>&#10149;</span>ver detalles</a>    
-                    </td>
+                {% endfor %}
 
-                </tr>
+
        
 
            </tbody>
