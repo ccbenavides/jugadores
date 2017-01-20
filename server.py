@@ -2,11 +2,21 @@
 en este modulo estoy haciendo peticiones http
 con la ayuda de flask
 """
+import os
 from flask import Flask, render_template, url_for, request, redirect
 from flaskext.mysql import MySQL
-import json
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
+
+# Esta es la ruta donde descargara la imagen
+app.config['UPLOAD_FOLDER'] = 'static/imagenes/'
+# estas son las extension que estara aceptando
+app.config['ALLOWED_EXTENSIONS'] = set(['png', 'jpg', 'jpeg'])
+# recivira un file, retorno si tiene el tipo permitido
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in app.config['ALLOWED_EXTENSIONS']
 
 # configuración de mysql con la aplicación
 mysql = MySQL()
@@ -38,7 +48,7 @@ def view(id_player=None):
     cursor.execute(''' select * from jugador where idjugador=%s''', id_player)
     data = cursor.fetchone()
 
-    return render_template('view.html', data)
+    return render_template('view.html', data=data)
 
 @app.route('/create')
 def create():
@@ -79,6 +89,7 @@ def show_post(post_id):
 @app.route('/crear_jugador', methods=['POST'])
 def crear_jugador():
     array_jugadores = str(request.get_data())
+    file = request.files['file']
     #change = request.args.get('premio', None)
     cursor.execute("""insert into jugador
                     (`apodo`, `nombre`, `mundiales`, `copas`, `goles`, `historia`, `url_img`) 
@@ -90,7 +101,7 @@ def crear_jugador():
                       , request.form['copas']
                       , request.form['goles']
                       , request.form['historia']
-                      , ""))
+                      , file.filename.replace(" ", "") ))
 
     cursor.execute("""insert into vista_jugador  (`idvista`, `idjugador`)
                     select idvista,LAST_INSERT_ID() from vista;""")
@@ -106,9 +117,21 @@ def crear_jugador():
                            (array.split("=")[1], jugador_id[0]))
     conn.commit()
 
+
+    # if user does not select file, browser also
+    # submit a empty part without filename
+    if file.filename == '':
+        redirect(url_for('admin'))
+
+    if file and allowed_file(file.filename):
+        #filename = secure_filename(file.filename)
+        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename.replace(" ", "")))
+
     # conn.commit()
     # return array_jugadores
     return redirect(url_for('admin'))
+
+
 
 # aca al ultimo agrega esto
 @app.route('/edit/<id_player>')
