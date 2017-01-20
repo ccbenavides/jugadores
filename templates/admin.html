@@ -45,8 +45,12 @@
                             href="/edit/{{ jugador[0] }}">
                             <span>&#9998;</span> 
                             Editar
-                        </a>    
-                        <!--<a class="bg-red" href="#"><span>&#10005;</span>Eliminar</a>    -->
+                        </a>   
+                        <a  class="bg-red" 
+                            href="/delete/{{ jugador[0] }}">
+                            <span>&#10005;</span> 
+                            Eliminar
+                        </a>   
                     </td>
                 </tr>
                 {% endfor %}

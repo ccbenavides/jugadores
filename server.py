@@ -78,6 +78,7 @@ def show_post(post_id):
 
 @app.route('/crear_jugador', methods=['POST'])
 def crear_jugador():
+    array_jugadores = str(request.get_data())
     #change = request.args.get('premio', None)
     cursor.execute("""insert into jugador
                     (`apodo`, `nombre`, `mundiales`, `copas`, `goles`, `historia`, `url_img`) 
@@ -93,17 +94,19 @@ def crear_jugador():
 
     cursor.execute("""insert into vista_jugador  (`idvista`, `idjugador`)
                     select idvista,LAST_INSERT_ID() from vista;""")
+
     cursor.execute(""" SELECT LAST_INSERT_ID() """)
     jugador_id = cursor.fetchone()
     # payload = json.loads(request.get_data().decode('utf-8'))
-    array_jugadores = str(request.get_data())
+
     for array in array_jugadores.split("&"):
         if array.split("=")[0] == "premio_":
             cursor.execute(""" insert into premios (descripcion, idjugador )
                         values ( %s, %s)""",
-                           (array.split("=")[1], str(jugador_id[0])))
-
+                           (array.split("=")[1], jugador_id[0]))
     conn.commit()
+
+    # conn.commit()
     # return array_jugadores
     return redirect(url_for('admin'))
 
@@ -133,5 +136,16 @@ WHERE idjugador = %s;
           , request.form['historia']
           , ""
           , id_player))
+    conn.commit()
+    return redirect(url_for('admin'))
+
+
+@app.route('/delete/<id_player>', methods=['GET'])
+def delete(id_player=None):
+    cursor.execute('delete from premios where idjugador=%s', id_player)
+    conn.commit()
+    cursor.execute('delete from vista_jugador where idjugador=%s', id_player)
+    conn.commit()
+    cursor.execute('delete from jugador where idjugador=%s', id_player)
     conn.commit()
     return redirect(url_for('admin'))
