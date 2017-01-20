@@ -45,6 +45,7 @@ def create():
     return render_template('create.html')
 
 
+
 @app.route('/edit_view/<id_player>')
 def edit_view(id_player=None):
     # consulta que me resuelve la lista de todo lo que
@@ -105,4 +106,32 @@ def crear_jugador():
     conn.commit()
     # return array_jugadores
     return redirect(url_for('admin'))
-    
+
+# aca al ultimo agrega esto
+@app.route('/edit/<id_player>')
+def edit(id_player=None):
+    cursor.execute(''' select * from jugador where idjugador=%s''', id_player)
+    data = cursor.fetchone()
+    return render_template('edit.html', data=data)
+
+@app.route('/actualizar/<id_player>', methods=['POST'])
+def actualizar(id_player=None):
+    cursor.execute('''UPDATE jugador SET
+apodo = %s,
+nombre = %s,
+mundiales = %s,
+copas = %s,
+goles = %s,
+historia = %s,
+url_img = %s
+WHERE idjugador = %s;
+    ''', (request.form['apodo']
+          , request.form['nombre']
+          , request.form['mundiales']
+          , request.form['copas']
+          , request.form['goles']
+          , request.form['historia']
+          , ""
+          , id_player))
+    conn.commit()
+    return redirect(url_for('admin'))
