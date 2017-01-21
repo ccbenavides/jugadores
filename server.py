@@ -3,9 +3,9 @@ en este modulo estoy haciendo peticiones http
 con la ayuda de flask
 """
 import os
+import time
 from flask import Flask, render_template, url_for, request, redirect
 from flaskext.mysql import MySQL
-from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
@@ -47,8 +47,11 @@ def admin():
 def view(id_player=None):
     cursor.execute(''' select * from jugador where idjugador=%s''', id_player)
     data = cursor.fetchone()
-
-    return render_template('view.html', data=data)
+    cursor.execute(''' select estado, `name`  from vista_jugador
+                        inner join vista on vista.idvista = vista_jugador.idvista
+                        where idjugador = %s''', id_player)
+    vistas = cursor.fetchall()
+    return render_template('view.html', data=data, vistas=vistas)
 
 @app.route('/create')
 def create():
@@ -66,6 +69,7 @@ def edit_view(id_player=None):
                     where idjugador = %s;
                     ''', id_player)
     data = cursor.fetchall()
+    longitud = len(data) - 1
 
     # consulta que me resulve un jugador expecifico
     # según su id
@@ -73,12 +77,17 @@ def edit_view(id_player=None):
                     jugador where idjugador=%s ''', id_player)
     jugador = cursor.fetchone()
 
-    return render_template('edit_view.html', data=data, jugador=jugador)
+    return render_template(
+        'edit_view.html',
+        data=data,
+        jugador=jugador,
+        longitud=longitud)
 
 @app.route('/edit_permisos/<int:post_id>', methods=['POST'])
 def show_post(post_id):
     # !mover los rangos según como estan los id de <vista> en la base de datos
-    for a in range(10, 15):
+    for a in range(int(request.form['id_vista_first'])
+                   , int(request.form['id_vista_last']) + 1):
         cursor.execute(""" UPDATE vista_jugador SET estado = %s
                     WHERE idjugador = %s and idvista = %s """,
                        (request.form[str(a)], post_id, a))
@@ -88,47 +97,45 @@ def show_post(post_id):
 
 @app.route('/crear_jugador', methods=['POST'])
 def crear_jugador():
-    array_jugadores = str(request.get_data())
-    file = request.files['file']
+    file_player = request.files['file']
+    if file_player.filename != '':
+        ext = file_player.filename.rsplit('.', 1)[1]
+        nombre_imagen = str(round(time.time() * 1000)) + "." + str(ext)
+    else:
+        ext = ''
+        nombre_imagen = ''
+
     #change = request.args.get('premio', None)
     cursor.execute("""insert into jugador
-                    (`apodo`, `nombre`, `mundiales`, `copas`, `goles`, `historia`, `url_img`) 
+                    (`apodo`, `nombre`, `mundiales`, `copas`, `goles`, `historia`, `url_img`,`premios`) 
                     values 
-                    (%s, %s, %s, %s, %s, %s , %s);
+                    (%s, %s, %s, %s, %s, %s , %s, %s);
                 """, (request.form['apodo']
                       , request.form['nombre']
                       , request.form['mundiales']
                       , request.form['copas']
                       , request.form['goles']
                       , request.form['historia']
-                      , file.filename.replace(" ", "") ))
+                      , nombre_imagen
+                      , request.form['premios']))
 
     cursor.execute("""insert into vista_jugador  (`idvista`, `idjugador`)
                     select idvista,LAST_INSERT_ID() from vista;""")
 
     cursor.execute(""" SELECT LAST_INSERT_ID() """)
     jugador_id = cursor.fetchone()
-    # payload = json.loads(request.get_data().decode('utf-8'))
-
-    for array in array_jugadores.split("&"):
-        if array.split("=")[0] == "premio_":
-            cursor.execute(""" insert into premios (descripcion, idjugador )
-                        values ( %s, %s)""",
-                           (array.split("=")[1], jugador_id[0]))
     conn.commit()
 
-
-    # if user does not select file, browser also
-    # submit a empty part without filename
-    if file.filename == '':
+    # si el file esta vacio no guarda imagen y te redirecciona a la vista admin
+    if file_player.filename == '':
         redirect(url_for('admin'))
 
-    if file and allowed_file(file.filename):
-        #filename = secure_filename(file.filename)
-        file.save(os.path.join(app.config['UPLOAD_FOLDER'], file.filename.replace(" ", "")))
+    if file_player and allowed_file(file_player.filename):
 
-    # conn.commit()
-    # return array_jugadores
+        file_player.save(
+            os.path.join(app.config['UPLOAD_FOLDER']
+                         , nombre_imagen))
+
     return redirect(url_for('admin'))
 
 
@@ -140,8 +147,19 @@ def edit(id_player=None):
     data = cursor.fetchone()
     return render_template('edit.html', data=data)
 
+
+
+
 @app.route('/actualizar/<id_player>', methods=['POST'])
 def actualizar(id_player=None):
+    file_player = request.files['file']
+    if file_player.filename != '':
+        ext = file_player.filename.rsplit('.', 1)[1]
+        nombre_imagen = str(round(time.time() * 1000)) + "." + str(ext)
+    else:
+        ext = ''
+        nombre_imagen = request.form['imagen']
+
     cursor.execute('''UPDATE jugador SET
 apodo = %s,
 nombre = %s,
@@ -149,7 +167,8 @@ mundiales = %s,
 copas = %s,
 goles = %s,
 historia = %s,
-url_img = %s
+url_img = %s,
+premios = %s
 WHERE idjugador = %s;
     ''', (request.form['apodo']
           , request.form['nombre']
@@ -157,16 +176,26 @@ WHERE idjugador = %s;
           , request.form['copas']
           , request.form['goles']
           , request.form['historia']
-          , ""
+          , nombre_imagen
+          , request.form['premios']
           , id_player))
     conn.commit()
+    # si el file esta vacio no guarda imagen y te redirecciona a la vista admin
+    if file_player.filename == '':
+        redirect(url_for('admin'))
+
+    if file_player and allowed_file(file_player.filename):
+        file_player.save(
+            os.path.join(app.config['UPLOAD_FOLDER']
+                         , nombre_imagen))
+
     return redirect(url_for('admin'))
+
+
 
 
 @app.route('/delete/<id_player>', methods=['GET'])
 def delete(id_player=None):
-    cursor.execute('delete from premios where idjugador=%s', id_player)
-    conn.commit()
     cursor.execute('delete from vista_jugador where idjugador=%s', id_player)
     conn.commit()
     cursor.execute('delete from jugador where idjugador=%s', id_player)

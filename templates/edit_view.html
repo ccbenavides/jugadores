@@ -12,7 +12,6 @@
         <div><a class="enlace" href="/admin"><span>&#10140;</span> Volver </a></div>
     </div>
     
-
    <form action="/edit_permisos/{{ jugador[0] }}" method="post">
         <table class="table_jugador">
            <thead>
@@ -23,8 +22,19 @@
             <tbody  class="table_body">
                 {% for vista in data %}
                 <tr>
+                    {% if data.index(vista) == 0 %}
+                           <input type="hidden" 
+                                name="id_vista_first"
+                                value={{ vista[1] }} />
+                    {% endif %}
+                    {% if data.index(vista) == longitud %}
+                           <input type="hidden" 
+                                name="id_vista_last"
+                                value={{ vista[1] }} />
+                    {% endif %}
                     <td>{{ vista[0] }}</td>
                     <td class="botones"> 
+                     
                         <input type="radio"
                                name="{{ vista[1]}}" 
                                {{ 'checked' if vista[2] == 1 }} 

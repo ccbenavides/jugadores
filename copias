@@ -21,3 +21,27 @@
                         values ( %s, %s)""",
                            (array.split("=")[1], jugador_id))
 
+
+
+
+    cursor.execute('''UPDATE jugador SET
+apodo = %s,
+nombre = %s,
+mundiales = %s,
+copas = %s,
+goles = %s,
+historia = %s,
+url_img = %s,
+premios = %s
+WHERE idjugador = %s;
+    ''', (request.form['apodo']
+          , request.form['nombre']
+          , request.form['mundiales']
+          , request.form['copas']
+          , request.form['goles']
+          , request.form['historia']
+          , ""
+          , request.form['premios']
+          , id_player))
+    conn.commit()
+    return redirect(url_for('admin'))

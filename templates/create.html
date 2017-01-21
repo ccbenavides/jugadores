@@ -26,7 +26,11 @@
                     class="img_responsive"
                     id="img_article"
                     />
-                <input type="file" name="file" onchange="previewFile()" id="file" class="inputfile"/>
+                <input type="file" 
+                        name="file" 
+                        onchange="previewFile()" 
+                        id="file" 
+                        class="inputfile"/>
                 <label class="label_file" for="file">Subir imagen</label>
            </div>
            <div>
@@ -45,18 +49,17 @@
           
            <div>
                    <h5>Historia:</h5>
-                   <textarea class="textarea" name="historia" id="" cols="30" rows="10"></textarea>
+                   <textarea class="textarea" name="historia" id="" cols="30" rows="5"></textarea>
            </div>
            <div>
-               <h5 class="botones">Premios recividos 
-                    <a class="bg-blue" 
-                       href="#"
-                       id="agregar_premio">Agregar</a> 
-                </h5>
-               <ul id="lista_premio">
-                 
-                  
-               </ul>
+               <h5>Premios recividos</h5>
+               <textarea class="textarea" 
+                         style="{white-space: pre-wrap}" 
+                         name="premios" 
+                         id="" 
+                         cols="30" 
+                         rows="5"></textarea>
+               
            </div>
        </article>
 
@@ -71,26 +74,7 @@
 </html>
 <!-- javascript solo para la parte de agregar premios y subir la imagen -->
 <script>
-    var agregar_premio = document.getElementById("agregar_premio");
-    var lista_premio = document.getElementById("lista_premio");
-
-
-    agregar_premio.onclick = function(e){
-        e.preventDefault();
-        let s = '<input type="text" name="premio_"><button  id="eliminar_premio">Eliminar</button>'; // HTML string
-        let li = document.createElement('li');
-        li.className += "list_premios";
-        li.innerHTML = s;
-        lista_premio.appendChild(li)
-    }
-
-    lista_premio.onclick = function(e){
-        if(e.target.id == "eliminar_premio"){
-           console.log(e.target.parentNode.remove())
-        }
-    }
-
-
+    // esta funcion sube la imagen e edita el input file <no tocar>
     function previewFile(){
        var preview = document.getElementById('img_article'); //selects the query named img
        var file    = document.querySelector('input[type=file]').files[0]; //sames as here
@@ -103,7 +87,7 @@
        if (file) {
            reader.readAsDataURL(file); //reads the data as a URL
        } else {
-           preview.src = "https://support.interviewstream.com/images/Upload-icon-text.png";
+           preview.src = "../static/imagenes/por_defecto.png";
        }
   }
 

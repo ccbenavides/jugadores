@@ -9,28 +9,71 @@
 <section class="container">
     <div class="top_menu">
         <div></div>
-        <div><a class="enlace" href="/admin"><span>&#10140;</span> Admin</a></div>
+        <div><a class="enlace" href="/"><span>↩</span> Inico</a></div>
     </div>
 
    <section>
+
        <article class="article">
-           <h1 class="article_title">Pelé  </h1>
+           <!--Apodo -->
+           <h1 class="article_title">
+               {% if vistas[0][0] == 1 %} 
+                    {{data[1]}}
+               {% else %}
+                    <span class="oculto"> oculto </span>
+               {% endif %}
+            </h1>
+           <!-- fin de apodo-->
+
+           <!-- Imagen -->
            <div>
+               {% if data[7] == None or data[7] == "" or vistas[6][0] == 0 %}
+               <img src="../static/imagenes/sin_imagen.jpg" 
+                    alt=""
+                    class="img_responsive"
+                    />
+               {% else %}
                <img src="../static/imagenes/{{ data[7] }}" 
                     alt=""
                     class="img_responsive"
                     />
+               {% endif %}
            </div>
+           <!--fin de imagen-->
            <div>
                 <div class="features">
                     <h5>Nombre : </h5>
-                    <p>Edson Arantes do Nascimento</p>
+                    <p>
+                        {% if vistas[1][0] == 1 %}
+                            {{ data[2] }}
+                        {% else %}
+                            <span class="oculto"> oculto </span>
+                        {% endif %}
+                    </p>
                     <h5>Mundiales ganados: </h5>
-                    <p>5</p>
+                    <p>
+                        {% if vistas[2][0] == 1 %}
+                            {{ data[3] }}
+                        {% else %}
+                            <span class="oculto"> oculto </span>
+                        {% endif %}  
+                    </p>
                     <h5>Copas Ganadas : </h5>
-                    <p>5</p>
+                    <p>
+                        {% if vistas[3][0] == 1 %}
+                            {{ data[4] }}
+                        {% else %}
+                            <span class="oculto"> oculto </span>
+                        {% endif %}
+                    </p>
                     <h5>Goles con su camisea :</h5>
-                    <p>200</p>
+                    <p>
+                        {% if vistas[4][0] == 1 %}
+                            {{ data[5] }}
+                        {% else %}
+                            <span class="oculto"> oculto </span>
+                        {% endif %}
+                    </p>
                     
                 </div>
            </div>
@@ -38,17 +81,21 @@
            <div>
                    <h5>Historia:</h5>
                    <p>
-                       Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem eaque, eius maiores illum enim blanditiis deserunt. Atque ut quas, consectetur modi quidem perspiciatis doloremque sapiente laborum, mollitia quibusdam a, repudiandae.
+                        {% if vistas[5][0] == 1 %}
+                            {{ data[6] }}
+                        {% else %}
+                            <span class="oculto"> oculto </span>
+                        {% endif %}
                    </p>
            </div>
            <div>
-               <h5>Premios recividos : </h5>
-               <ul>
-                   <li>Lorem ipsum dolor sit amet, consectetur adipisicing elit. </li>
-                   <li>Sit architecto, omnis perspiciatis animi unde aspernatur. </li>
-                   <li>officia perferendis quod corporis nihil.</li>
-                   <li>tempore amet itaque iure quisquam, iste tempora cum ipsam quia.</li>
-               </ul>
+               <h5>Premios recibidos : </h5>
+                {% if vistas[7][0] == 1 %}
+                   <textarea class="texto_disable" disabled cols="30" rows="10">{{data[8]}}</textarea>
+                {% else %}
+                    <span class="oculto"> oculto </span>
+                {% endif %}
+               
            </div>
        </article>
    </section>

@@ -260,3 +260,26 @@ input[type="text"]{
     border-radius: 6px;
     font-weight: 900;
 }
+
+.top_menu >div:first-child {
+    font-style: italic;
+    font-weight: 900;
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.texto_disable{
+    background: transparent;
+    width: 100%;
+    border:0;
+    cursor: default;
+}
+
+.oculto{
+    font-size: 12px;
+    font-weight: 100;
+    border-radius: 5px;
+    background: gainsboro;
+    color: #5a5252;
+    padding: 3px 8px;
+}

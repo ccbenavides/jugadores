@@ -14,19 +14,35 @@
        <header>
         <h1 class="titulo">Registre un trabajador </h1>
     </header>
-    <form action="/actualizar/{{ data[0] }}" method="POST">
+    <form action="/actualizar/{{ data[0] }}" 
+            method="POST"
+            enctype="multipart/form-data">
         <article class="article">
            <h1 class="width_100">
                 <label for="">Comunmente llamado: </label>               
                 <input type="text" name="apodo" value="{{ data[1] }}" />
            </h1>
            <div>
-               <img src="" 
+               {% if data[7] == None or data[7] == "" %}
+               <img src="../static/imagenes/sin_imagen.jpg" 
                     alt=""
                     class="img_responsive"
-                    id="img_article"
+                      id="img_article"
                     />
-                <input type="file" name="file" onchange="previewFile()" id="file" class="inputfile"/>
+
+               {% else %}
+               <img src="../static/imagenes/{{ data[7] }}" 
+                    alt=""
+                    class="img_responsive"
+                      id="img_article"
+                    />
+               {% endif %}
+                <input type="file" 
+                        name="file" 
+                        onchange="previewFile()" 
+                        id="file" 
+                        class="inputfile"/>
+               
                 <label class="label_file" for="file">Subir imagen</label>
            </div>
            <div>
@@ -45,22 +61,18 @@
           
            <div>
                    <h5>Historia:</h5>
-                   <textarea class="textarea" name="historia" id="" cols="30" rows="10">{{ data[6] }}</textarea>
+                   <textarea class="textarea" name="historia" id="" cols="30" rows="5">{{ data[6] }}</textarea>
            </div>
            <div>
-               <h5 class="botones">Premios recividos 
-                    <a class="bg-blue" 
-                       href="#"
-                       id="agregar_premio">Agregar</a> 
-                </h5>
-               <ul id="lista_premio">
-                 
-                  
-               </ul>
+               <h5 class="botones">Premios recividos    </h5>
+                <textarea  class="textarea"  name="premios" cols="30" rows="5">{{data[8]}}</textarea>
            </div>
        </article>
 
        <div class="boton_registrar" >
+            <input type="hidden"
+                        name="imagen"
+                        value="{{ data[7] }}" />
            <input type="submit" value="Actualizar">
        </div>
     </form>
@@ -71,24 +83,6 @@
 </html>
 <!-- javascript solo para la parte de agregar premios y subir la imagen -->
 <script>
-    var agregar_premio = document.getElementById("agregar_premio");
-    var lista_premio = document.getElementById("lista_premio");
-
-
-    agregar_premio.onclick = function(e){
-        e.preventDefault();
-        let s = '<input type="text" name="premio_"><button  id="eliminar_premio">Eliminar</button>'; // HTML string
-        let li = document.createElement('li');
-        li.className += "list_premios";
-        li.innerHTML = s;
-        lista_premio.appendChild(li)
-    }
-
-    lista_premio.onclick = function(e){
-        if(e.target.id == "eliminar_premio"){
-           console.log(e.target.parentNode.remove())
-        }
-    }
 
 
     function previewFile(){
@@ -102,10 +96,8 @@
 
        if (file) {
            reader.readAsDataURL(file); //reads the data as a URL
-       } else {
-           preview.src = "https://support.interviewstream.com/images/Upload-icon-text.png";
        }
-  }
+    }
 
-  previewFile();
+    previewFile();
 </script>
